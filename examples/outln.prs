@@ -1,0 +1,5 @@
+10 'lf DEF ; ascii for new line
+
+( OUT lf PUTC ) 'OUTLN DEF
+
+READ OUTLN

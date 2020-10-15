@@ -1,0 +1,48 @@
+
+; An example of a syntatic form that might be defined in Parus
+; this implements a FOR-like looping structure
+; this examples though recursive runs in constant space using the recall optimization
+
+; redefines a symbol
+(
+	DPL DEL 
+	DEF
+) 'REDEF DEF
+
+( 
+	'FOR_FN 		DEF ; bind the function
+	'FOR_i 		DEF ; bind the increment amount
+	'FOR_cmp 		DEF ; symbol to comparator function
+	'FOR_b 		DEF ; bind the end value
+	'FOR_a 		DEF ; bind the start value
+	QUOTE 'FOR_sym DEF ; bind the symbol that represent the iterator
+	; For example 
+	; if the iterator symbol is i the FOR_sym means i 
+	; and FOR_sym ! means the value of i
+
+	FOR_a FOR_sym DEF ; bind start value to iterator
+	
+	( 
+		FOR_sym ! FOR_b FOR_cmp
+		; call the function, then redefine the iterator as iterator + FOR_i, then iterate again 
+		( FOR_FN ! FOR_sym ! FOR_i + FOR_sym REDEF FOR_HELPER  )
+		; delete the iterator
+		( FOR_sym DEL ) IF !
+	) 'FOR_HELPER DEF
+	
+	FOR_HELPER
+	
+	; delete everything the FOR used
+	'FOR_HELPER DEL
+	'FOR_FN 	DEL
+	'FOR_i 		DEL
+	'FOR_cmp 	DEL
+	'FOR_b 		DEL 
+	'FOR_a 		DEL 
+	'FOR_sym 	DEL
+
+) 'FOR DEF
+
+( 1 @. 1 @. < 2 @ 2 @ = + ) '<= DEF
+
+'a 1 10 '<= 1 ( a OUTLN ) FOR 

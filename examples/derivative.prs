@@ -1,0 +1,9 @@
+( 
+	'DRV_f DEF
+	DPL 0.001 + DRV_f 1 @ DRV_f - 0.001 /
+	'DRV_f DEL
+) 'DRV DEF
+
+( DPL * ) 'PARABOLA DEF
+
+5 'PARABOLA DRV OUTLN

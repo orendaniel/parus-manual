@@ -1,0 +1,266 @@
+The Parus language 
+Postfixed Reprogrammable Stack language
+
+Copyright (c) 2020 Oren Daniel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this Manual, to deal
+in the Manual without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, and/or sell
+copies of the Manual, and to permit persons to whom the Manual is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+distributated copies of the Manual.
+
+THE MANUAL IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE MANUAL OR THE USE OR OTHER DEALINGS IN THE
+MANUAL.
+
+
+Context
+--------------------------------------------------------------------------------
+
+Parus is a stack based symbolic programming language, devised around Rosh Hashana of the year 2020 by Oren Daniel.
+The following document defines the language, however it does not define any specific implementation of the language.
+Neither is this document suited as a learning material for the language.
+The language is named after Paridae bird family (Tits, Titmice and Chickadees).
+Members of the Paridae family are small, highly intelligent and highly adaptable birds (much like the language itself).
+
+
+Notes
+--------------------------------------------------------------------------------
+
+The convention used in this manual is: symbols bounded to macros are UPPER case, while symbols bounded to values are lower case.
+
+The word push refers to pushing data onto stack.
+The word pull refers to pulling data out of the stack.
+
+The expression "Nth index" or "index" refers to an index in the stack, counting from the top.
+For example index 0 refers the most recently pushed item, etc.
+
+
+Evaluation process
+--------------------------------------------------------------------------------
+
+The evaluator can be expressed as this psudo-program:
+
+	self defining? -> push self
+
+		self defining values are values, that define themselves such as:
+		Numbers, strings, macros etc ...
+
+	imperative? -> pull the top of the stack and apply it
+
+		The ! is a special character that signifies an imperative form.
+		
+	quoted? -> push quoted
+		
+		a quoted symbol is any symbol that is prefixed with a ' character.
+
+		* only symbols and quoted symbols can be quoted, it is a syntax error to do otherwise.
+
+
+	symbol? -> apply symbol:
+		
+		In order to apply a symbol:
+
+		get from the lexicon the binding of the symbol
+		
+		macro 	-> apply
+		else 	-> evaluate the value
+
+		* assuming that such a binding exists, if it doesn't exists an error is signaled.
+		* invald symbols: !, ', ;, (, )
+
+
+	Comments are marked by a semicolon (;) and they span until the end of the line.
+
+In order to evaluate a Parus expression both a stack and a lexicon are required.
+The stack represent the program's memory, it is a last in first out data structure.
+The lexicon represent the program's environment, it is a non scoping associative array (all entries in the lexicon are global).
+The lexicon can contain multiple entries with the same name, it will always return the most recent entry.
+
+Invalid Expressions:
+	-Unterminated or uninitiated parentheses.
+	-A standalone Quote form (', '', ''', ...)
+	-A non symbolic quote
+
+If invalid expression is given an error is signaled.
+
+Examples for valid expressions
+-----------------------------
+'Symbol 
+''QSym
+1
+( 1 2 ( + ) ! ) !
+( DPL * ) '^2 DEF ; 3 expressions ( DPL * ), '^2, DEF 
+
+Examples for invalid expressions
+--------------------------------
+( ) ) 		; uninitiated
+( ( ) 		; unterminated
+' 			; invalid quote form
+''' 		; invalid quote form
+(DPL * ) 	; the parentheses must be separated by a space 
+'( DPL * )  ; non symbolic quote
+'''5  		; non symbolic quote
+'!  		; non symbolic quote
+
+
+Datatypes
+--------------------------------------------------------------------------------
+
+Parus requires the following datatypes:
+	-Macros - Both primitive and user defined macros 
+	-Symbols
+	-Quoted values
+	-Numeric value (either integers or floating points or both)
+
+Parus may optionally support any other datatype such as:
+	-Complex numbers
+	-Rational numbers
+	-Strings
+	-Arrays
+	-Files
+	... etc
+
+
+Primitive Macros
+--------------------------------------------------------------------------------
+
+[ value symbol ] DEF
+Defines a new entry on the lexicon.
+
+[ symbol ] DEL
+Deletes the most recent entry from the lexicon.
+
+[ condition true false ] IF
+If condition is a non zero value then, pull false else, pull true from the stack.
+
+[ value ] QUOTE
+Quotates the top item of the stack if it is a symbol or quoted, else an error is signaled.
+
+[ index ] @
+Called "fetch", brings the item from the Nth index to the top of the stack, and removes the original.
+
+[ index ] @.
+Called "fetch copy" brings a copy of the item from the Nth index to the top of the stack, without removing the original.
+
+LEN 
+Push the size of the stack (not including the LEN's result).
+
+[ value ] FIND
+Push the index of the most recent equivalent value.
+
+[ a b ] EQV?
+Push a non 0 value if a and b are equivalent 0 if not.
+
+[ item ] OUT
+Pull and send to terminal the textual representation of the item.
+
+[ ASCII/Utf-8 ] PUTC 
+Send to terminal the character represented by the number given.
+* this macro is required for implementations that don't support strings
+
+READ 
+Reads from keyboard a valid symbol or number.
+
+Arithmetic operations:
+
+[ a b ] + 	==> push a + b
+[ a b ] - 	==> push a - b
+[ a b ] * 	==> push a * b
+[ a b ] / 	==> push a / b if b is 0 then an error is signaled and an undefined value is pushed
+[ a b ] = 	==> push 0 if not (a = b), a non zero value if a = b 
+[ a b ] < 	==> push 0 if not (a < b), a non zero value if a < b
+[ a b ] > 	==> push 0 if not (a > b), a non zero value if a > b
+
+Any datatype included in the implementation, has to have a macro that return if the top of the stack is of that datatype.
+
+For example:
+
+[ item ] INTEGER? 
+pushes a non 0 zero value if item is an integer else push 0.
+
+[ item ] MACRO?
+pushes a non 0 zero value if item is a macro (either a primitive or user defined) else pushes 0.
+
+[ item ] SYMBOL?
+pushes a non 0 zero value if item is a symbol else pushes 0.
+
+[ item ] QUOTED?
+pushes a non 0 zero value if item is quoted else pushes 0.
+
+
+Any other primitive may be included with a Parus implementation for more domain specific tasks.
+
+It is also recommended to include a common macros, Such as:
+[ symbol min max cmp inc fn ] FOR
+[ item ] DPL
+[ item ] DROP
+ ... etc
+Although these macros could also be expressed in Parus.
+
+It is also recommended to include macros like ?stk, ?lex in order to inspect the program.
+
+
+Recursion and Iteration
+--------------------------------------------------------------------------------
+
+Any iterative construct in Parus is represented by a recursive construct.
+
+For Example consider:
+
+( A ) 'A DEF A 
+
+If no optimization was present in the implementation the following expression will result in overflow of the call stack,
+However this example is iterative (even though it has no result),
+So theoretically this process oughts to run an infinite amount of times without overflowing the call stack.
+
+In order to solve this problem the following optimization can be applied:
+
+The last call of any macro should run in the same call as the calling macro.
+
+This derives from the observation that once the last call has ended, the calling macro itself has ended,
+Thus there is no macro to return to, so it won't effect the computation if both macros would share the same call.
+
+The following macro cannot be optimized:
+( A 1 + ) 'A DEF A
+Sense the call to A is not the last instruction in the macro, and the process will cause a call stack overflow eventually.
+
+If the number of calls exceeds a preset value then an error is signaled and all execution is halted.
+
+Note that these examples are also iterative:
+
+( 'A ! ) 'A DEF A
+
+( ( A ) ! ) 'A DEF A
+
+( B ) 'A DEF
+( A ) 'B DEF A
+
+
+Appendix
+--------------------------------------------------------------------------------
+
+The principles of the Parus language could be illustrated by the following simple Lisp functions:
+
+(define parus-apply (lambda (value stk lex)
+		(cond
+			((primitive? value) (value stk lex))
+			((macro? value)		(macro-eval value stk lex))
+			(else 				(parus-eval value stk lex)))))
+
+(define parus-eval (lambda (expr stk lex)
+	(cond
+		((self? expr) 		((stk 'push) expr))
+		((imperative? expr) (parus-apply ((stk 'pull)) stk lex))
+		((quoted? expr)		((stk 'push) (quotate expr)))
+		((symbol? expr) 	(parus-apply ((lex 'get) expr) stk lex))
+
+		(else (display "invalid expression ") (display expr) (newline) '()))))
