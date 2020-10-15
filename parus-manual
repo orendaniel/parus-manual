@@ -99,6 +99,9 @@ Examples for valid expressions
 1
 ( 1 2 ( + ) ! ) !
 ( DPL * ) '^2 DEF ; 3 expressions ( DPL * ), '^2, DEF 
+f(t)
+David's-House
+run!
 
 Examples for invalid expressions
 --------------------------------
