@@ -44,7 +44,7 @@ The convention used in this manual is: symbols bounded to macros are UPPER case,
 The word push refers to pushing data onto stack.
 The word pull refers to pulling data out of the stack.
 
-The expression "Nth index" or "index" refers to an index in the stack, counting from the top.
+The expression "Nth index" or "index" refers to a position in the stack, counting from the top of the stack.
 For example index 0 refers the most recently pushed item, etc.
 
 
@@ -78,7 +78,7 @@ The evaluator can be expressed as this psudo-program:
 		macro 	-> apply
 		else 	-> evaluate the value
 
-		* assuming that such a binding exists, if it doesn't exists an error is signaled.
+		* assuming that such a binding exists
 		* invald symbols: !, ', ;, (, )
 
 
@@ -123,17 +123,17 @@ Datatypes
 --------------------------------------------------------------------------------
 
 Parus requires the following datatypes:
-	-Macros - Both primitive and user defined macros 
-	-Symbols
-	-Quoted values
-	-Numeric value (either integers or floating points or both)
+	- Macros - Both primitive and user defined macros 
+	- Symbols
+	- Quoted values
+	- Numeric value (either integers or floating points or both)
 
 Parus may optionally support any other datatype such as:
-	-Complex numbers
-	-Rational numbers
-	-Strings
-	-Arrays
-	-Files
+	- Complex numbers
+	- Rational numbers
+	- Strings
+	- Arrays
+	- Files
 	... etc
 
 
@@ -150,16 +150,18 @@ Deletes the most recent entry from the lexicon.
 If condition is a non zero value then, pull false else, pull true from the stack.
 
 [ value ] QUOTE
-Quotates the top item of the stack if it is a symbol or quoted, else an error is signaled.
+Quotates the top item of the stack assuming it is quotable.
 
 [ index ] @
-Called "fetch", brings the item from the Nth index to the top of the stack, and removes the original.
+Also known as "fetch",
+brings the item from the Nth index to the top of the stack, and removes the original.
 
 [ index ] @.
-Called "fetch copy" brings a copy of the item from the Nth index to the top of the stack, without removing the original.
+Also known as "fetch copy",
+brings a copy of the item from the Nth index to the top of the stack, without removing the original.
 
 LEN 
-Push the size of the stack (not including the LEN's result).
+Push the size of the stack (not including LEN's result).
 
 [ value ] FIND
 Push the index of the most recent equivalent value.
@@ -182,7 +184,7 @@ Arithmetic operations:
 [ a b ] + 	==> push a + b
 [ a b ] - 	==> push a - b
 [ a b ] * 	==> push a * b
-[ a b ] / 	==> push a / b if b is 0 then an error is signaled and an undefined value is pushed
+[ a b ] / 	==> push a / b if b is 0 then a warning is displayed and an undefined value is pushed
 [ a b ] = 	==> push 0 if not (a = b), a non zero value if a = b 
 [ a b ] < 	==> push 0 if not (a < b), a non zero value if a < b
 [ a b ] > 	==> push 0 if not (a > b), a non zero value if a > b
@@ -192,22 +194,23 @@ Any datatype included in the implementation, has to have a macro that return if 
 For example:
 
 [ item ] INTEGER? 
-pushes a non 0 zero value if item is an integer else push 0.
+push a non 0 zero value if item is an integer else push 0.
 
 [ item ] MACRO?
-pushes a non 0 zero value if item is a macro (either a primitive or user defined) else pushes 0.
+push a non 0 zero value if item is a macro (either a primitive or user defined) else push 0.
 
 [ item ] SYMBOL?
-pushes a non 0 zero value if item is a symbol else pushes 0.
+push a non 0 zero value if item is a symbol else push 0.
 
 [ item ] QUOTED?
-pushes a non 0 zero value if item is quoted else pushes 0.
+push a non 0 zero value if item is quoted else push 0.
 
 
 Any other primitive may be included with a Parus implementation for more domain specific tasks.
 
 It is also recommended to include a common macros, Such as:
 [ symbol min max cmp inc fn ] FOR
+CASE [ c1 e1 c2 e2 ... ] END-CASE
 [ item ] DPL
 [ item ] DROP
  ... etc
@@ -227,7 +230,7 @@ For Example consider:
 
 If no optimization was present in the implementation the following expression will result in overflow of the call stack,
 However this example is iterative (even though it has no result),
-So theoretically this process oughts to run an infinite amount of times without overflowing the call stack.
+So theoretically this process ought to run an infinite amount of times without overflowing the call stack.
 
 In order to solve this problem the following optimization can be applied:
 
@@ -240,7 +243,7 @@ The following macro cannot be optimized:
 ( A 1 + ) 'A DEF A
 Sense the call to A is not the last instruction in the macro, and the process will cause a call stack overflow eventually.
 
-If the number of calls exceeds a preset value then an error is signaled and all execution is halted.
+If the number of calls exceeds a preset value then an error is signaled.
 
 Note that these examples are also iterative:
 
@@ -248,8 +251,26 @@ Note that these examples are also iterative:
 
 ( ( A ) ! ) 'A DEF A
 
+( ( 'A ! ) ! ) 'A DEF A
+
 ( B ) 'A DEF
 ( A ) 'B DEF A
+
+Errors
+--------------------------------------------------------------------------------
+
+Under the following circumstances an error is signaled:
+- When an invalid expression given
+- When the stack has overflowed
+- When the stack has underflowed
+- When an entry cannot be defined 
+	(for example when lexicon's memory has overflowed)
+- When programs attempt to delete an undefined entry
+- When programs attempt to retrieve an undefined entry
+- When there is insufficient memory to complete the computation 
+	(for example when the maximal call depths has been reached)
+
+Primitive function which fail to execute successfully may also signal an error.
 
 
 Appendix
