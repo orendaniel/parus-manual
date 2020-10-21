@@ -36,7 +36,7 @@ CASE
 	( x 3 < )   ( 'A OUTLN )
 	( x 3 = )   ( CASE ( 5 3 < ) ( 'C OUTLN ) ( else ) ( 'D OUTLN ) END-CASE )
 	( else )    ( 'B OUTLN )
-END-CASE !
+END-CASE
 ; END-CASE is the actual macro which evaluate the structure
 
 'x DEL

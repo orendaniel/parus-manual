@@ -25,7 +25,7 @@
 	( 
 		FOR_sym ! FOR_b FOR_cmp
 		; call the function, then redefine the iterator as iterator + FOR_i, then iterate again 
-		( FOR_FN ! FOR_sym ! FOR_i + FOR_sym REDEF FOR_HELPER  )
+		( FOR_FN FOR_sym ! FOR_i + FOR_sym REDEF FOR_HELPER  )
 		; delete the iterator
 		( FOR_sym DEL ) IF !
 	) 'FOR_HELPER DEF
