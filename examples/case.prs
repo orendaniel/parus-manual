@@ -6,7 +6,7 @@
 1 'else DEF 		; else will always evaluate to true
 
 
-( FIND 'i 0 2 @ '< 1 'DROP FOR ) 'STRIP DEF ; a helper function that cleans the stack until a label
+( FIND 'STRIP_i 0 2 @ '< 1 'DROP FOR ) 'STRIP DEF ; a helper function that cleans the stack until a label
 
 ( 
 	CASE FIND 1 - @ ! ; get the conditional macro
