@@ -176,6 +176,10 @@ Pull and send to terminal the textual representation of the item.
 Send to terminal the character represented by the number given.
 * this macro is required for implementations that don't support strings
 
+[ ASCII/Utf-8 ] GETC 
+Push the number that represent the character that is read from the terminal.
+* this macro is required for implementations that don't support strings
+
 READ 
 Reads from keyboard a valid symbol or number.
 
