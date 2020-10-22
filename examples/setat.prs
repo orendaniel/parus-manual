@@ -1,3 +1,5 @@
+; [ value index ] SETAT
+
 (
 	DPL 2 + @ DROP ; remove original
 	'SETAT_ind DEF 
