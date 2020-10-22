@@ -1,0 +1,11 @@
+(
+	DPL 2 + @ DROP ; remove original
+	'SETAT_ind DEF 
+	'SETAT_i 0 SETAT_ind '< 1 ( SETAT_ind @ ) FOR 
+	'SETAT_ind DEL 
+) 'SETAT DEF 
+
+1 2 3 4 5 
+
+9 2 SETAT
+?stk
