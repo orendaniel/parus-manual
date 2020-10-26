@@ -58,25 +58,19 @@ The evaluator can be expressed as this psudo-program:
 		self defining values are values, that define themselves such as:
 		Numbers, strings, macros etc ...
 
-	imperative? -> pull the top of the stack and apply it
-
-		The ! is a special character that signifies an imperative form.
-		
 	quoted? -> push quoted
 		
 		a quoted symbol is any symbol that is prefixed with a ' character.
 
 		* only symbols and quoted symbols can be quoted, it is a syntax error to do otherwise.
+	
+	force? -> pull the top of the stack and apply it
 
-
-	symbol? -> apply symbol:
+		The ! is a special character that signifies a force form.
 		
-		In order to apply a symbol:
-
-		get from the lexicon the binding of the symbol
+	symbol? -> get from lexicon the binding of the symbol and apply it:
 		
-		macro 	-> apply
-		else 	-> evaluate the value
+		a symbol is valid expression which is not one of the above
 
 		* assuming that such a binding exists
 		* invald symbols: !, ', ;, (, )
@@ -291,8 +285,8 @@ The principles of the Parus language could be illustrated by the following simpl
 (define parus-eval (lambda (expr stk lex)
 	(cond
 		((self? expr) 		((stk 'push) expr))
-		((imperative? expr) (parus-apply ((stk 'pull)) stk lex))
 		((quoted? expr)		((stk 'push) (quotate expr)))
+		((force-form? expr) (parus-apply ((stk 'pull)) stk lex))
 		((symbol? expr) 	(parus-apply ((lex 'get) expr) stk lex))
 
 		(else (display "invalid expression ") (display expr) (newline) '()))))
