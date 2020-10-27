@@ -291,4 +291,4 @@ The principles of the Parus language could be illustrated by the following simpl
 		((quoted? expr)		((stk 'push) (quotate expr)))
 		((symbol? expr) 	(parus-apply ((lex 'get) expr) stk lex))
 
-		(else (display "invalid expression ") (display expr) (newline) '()))))
+		(else (display "invalid expression")))))
