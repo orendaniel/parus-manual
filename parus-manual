@@ -284,7 +284,7 @@ The principles of the Parus language could be illustrated by the following simpl
 (define parus-apply (lambda (value stk lex)
 		(cond
 			((primitive? value) (value stk lex))
-			((macro? value)		(macro-eval value stk lex))
+			((macro? value)		(macro-apply value stk lex))
 			(else 				(parus-eval value stk lex)))))
 
 (define parus-eval (lambda (expr stk lex)
