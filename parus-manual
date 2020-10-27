@@ -139,7 +139,7 @@ Also known as "apply top" or simply "apply", Passes the top of the stack to the 
 
 * ON SOME (BUT NOT ALL) program languages, the apply function will have to provide a "back door" for this primitive,
 or any other similiar primitive, because if the primitive ! calls the apply function, 
-and the apply function will try to apply the symbol ! it will cause mutual recurssion between the two processes.
+and the apply function will try to apply the symbol ! it will cause mutual recursion between the two processes.
 
 [ value ] QUOTE
 Quotates the top item of the stack assuming it is quotable.
