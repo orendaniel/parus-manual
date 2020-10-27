@@ -33,7 +33,7 @@ Parus is a stack based symbolic programming language, devised around Rosh Hashan
 The following document defines the language, however it does not define any specific implementation of the language.
 Neither is this document suited as a learning material for the language.
 The language is named after Paridae bird family (Tits, Titmice and Chickadees).
-Members of the Paridae family are small, highly intelligent and highly adaptable birds (much like the language itself).
+Members of the Paridae family exhibit high intelligance, high adaptability and small size (much like the language itself).
 
 
 Notes
@@ -56,7 +56,7 @@ The evaluator can be expressed as this psudo-program:
 	self defining? -> push self
 
 		self defining values are values, that define themselves such as:
-		Numbers, strings, macros etc ...
+		macros, numbers, strings, arrays etc ...
 
 	quoted? -> push quoted
 		
@@ -64,16 +64,12 @@ The evaluator can be expressed as this psudo-program:
 
 		* only symbols and quoted symbols can be quoted, it is a syntax error to do otherwise.
 	
-	force? -> pull the top of the stack and apply it
-
-		The ! is a special character that signifies a force form.
-		
 	symbol? -> get from lexicon the binding of the symbol and apply it:
 		
 		a symbol is valid expression which is not one of the above
 
 		* assuming that such a binding exists
-		* invald symbols: !, ', ;, (, )
+		* invald symbols: ', ;, (, )
 
 
 	Comments are marked by a semicolon (;) and they span until the end of the line.
@@ -99,7 +95,6 @@ Examples for valid expressions
 ( DPL * ) '^2 DEF ; 3 expressions ( DPL * ), '^2, DEF 
 f(t)
 David's-House
-run!
 
 Examples for invalid expressions
 --------------------------------
@@ -110,7 +105,6 @@ Examples for invalid expressions
 (DPL * ) 	; the parentheses must be separated by a space 
 '( DPL * )  ; non symbolic quote
 '''5  		; non symbolic quote
-'!  		; non symbolic quote
 
 
 Datatypes
@@ -140,15 +134,25 @@ Defines a new entry on the lexicon.
 [ symbol ] DEL
 Deletes the most recent entry from the lexicon.
 
-[ condition true false ] IF
-If condition is a non zero value then, pull false else, pull true from the stack.
+[ top-of-the-stack ] !
+Also known as "apply top" or simply "apply", Passes the top of the stack to the apply function.
+
+* ON SOME (BUT NOT ALL) program languages, the apply function will have to provide a "back door" for this primitive,
+or any other similiar primitive, because if the primitive ! calls the apply function, 
+and the apply function will try to apply the symbol ! it will cause mutual recurssion between the two processes.
 
 [ value ] QUOTE
 Quotates the top item of the stack assuming it is quotable.
 
+[ condition true false ] IF
+If condition is a non zero value then, pull false else, pull true from the stack.
+
 [ index ] @
 Also known as "fetch",
 brings the item from the Nth index to the top of the stack, and removes the original.
+
+[ item ] DROP
+Drops the top of the stack
 
 [ index ] @.
 Also known as "fetch copy",
@@ -163,19 +167,6 @@ Push the index of the most recent equivalent value.
 [ a b ] EQV?
 Push a non 0 value if a and b are equivalent 0 if not.
 
-[ item ] OUT
-Pull and send to terminal the textual representation of the item.
-
-[ ASCII/Utf-8 ] PUTC 
-Send to terminal the character represented by the number given.
-* this macro is required for implementations that don't support strings
-
-[ ASCII/Utf-8 ] GETC 
-Push the number that represent the character that is read from the terminal.
-* this macro is required for implementations that don't support strings
-
-READ 
-Reads from keyboard a valid symbol or number.
 
 Arithmetic operations:
 
@@ -203,6 +194,19 @@ push a non 0 zero value if item is a symbol else push 0.
 [ item ] QUOTED?
 push a non 0 zero value if item is quoted else push 0.
 
+recommended IO functions:
+
+[ item ] OUT
+Pull and send to terminal the textual representation of the item.
+
+[ ASCII/Utf-8 ] PUTC 
+Send to terminal the character represented by the number given.
+
+[ ASCII/Utf-8 ] GETC 
+Push the number that represent the character that is read from the terminal.
+
+READ 
+Reads from keyboard a valid symbol or number.
 
 Any other primitive may be included with a Parus implementation for more domain specific tasks.
 
@@ -210,7 +214,6 @@ It is also recommended to include a common macros, Such as:
 [ symbol min max cmp inc fn ] FOR
 CASE [ c1 e1 c2 e2 ... ] END-CASE
 [ item ] DPL
-[ item ] DROP
  ... etc
 Although these macros could also be expressed in Parus.
 
@@ -286,7 +289,6 @@ The principles of the Parus language could be illustrated by the following simpl
 	(cond
 		((self? expr) 		((stk 'push) expr))
 		((quoted? expr)		((stk 'push) (quotate expr)))
-		((force-form? expr) (parus-apply ((stk 'pull)) stk lex))
 		((symbol? expr) 	(parus-apply ((lex 'get) expr) stk lex))
 
 		(else (display "invalid expression ") (display expr) (newline) '()))))
