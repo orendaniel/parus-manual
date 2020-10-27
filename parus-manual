@@ -248,6 +248,8 @@ If the number of calls exceeds a preset value then an error is signaled.
 
 Note that these examples are also iterative:
 
+'a 'a DEF
+
 ( 'A ! ) 'A DEF A
 
 ( ( A ) ! ) 'A DEF A
