@@ -147,12 +147,12 @@ Quotates the top item of the stack assuming it is quotable.
 [ condition true false ] IF
 If condition is a non zero value then, pull false else, pull true from the stack.
 
+[ a b ] EQV?
+Push a non 0 value if a and b are equivalent 0 if not.
+
 [ index ] @
 Also known as "fetch",
 brings the item from the Nth index to the top of the stack, and removes the original.
-
-[ item ] DROP
-Drops the top of the stack
 
 [ index ] @.
 Also known as "fetch copy",
@@ -161,11 +161,12 @@ brings a copy of the item from the Nth index to the top of the stack, without re
 LEN 
 Push the size of the stack (not including LEN's result).
 
+[ item ] DROP
+Drops the top of the stack
+
 [ value ] FIND
 Push the index of the most recent equivalent value.
 
-[ a b ] EQV?
-Push a non 0 value if a and b are equivalent 0 if not.
 
 
 Arithmetic operations:
