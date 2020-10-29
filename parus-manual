@@ -62,7 +62,7 @@ The evaluator can be expressed as this psudo-program:
 		
 		a quoted symbol is any symbol that is prefixed with a ' character.
 
-		* only symbols and quoted symbols can be quoted, it is a syntax error to do otherwise.
+		* only symbols and quoted symbols can be quoted, it is an undefined behavior to do otherwise.
 	
 	symbol? -> get from lexicon the binding of the symbol and apply it:
 		
