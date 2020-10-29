@@ -283,15 +283,16 @@ Appendix
 The principles of the Parus language could be illustrated by the following simple Lisp functions:
 
 (define parus-apply (lambda (value stk lex)
-		(cond
-			((primitive? value) (value stk lex))
-			((macro? value)		(macro-apply value stk lex))
-			(else 				(parus-eval value stk lex)))))
+	(cond
+		((primitive? value) (value stk lex))
+		((macro? value)     (macro-eval value stk lex))
+		(else               (parus-eval value stk lex)))))
 
 (define parus-eval (lambda (expr stk lex)
 	(cond
-		((self? expr) 		((stk 'push) expr))
-		((quoted? expr)		((stk 'push) (quotate expr)))
-		((symbol? expr) 	(parus-apply ((lex 'get) expr) stk lex))
+		((self? expr)       ((stk 'push) expr))
+		((quoted? expr)     ((stk 'push) (quotate expr)))
+		((symbol? expr)     (parus-apply ((lex 'get) expr) stk lex))
 
-		(else (display "invalid expression")))))
+		(else (display "invalid expression ") (display expr) (newline) '()))))
+
