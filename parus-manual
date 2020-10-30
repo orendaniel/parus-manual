@@ -39,7 +39,7 @@ Members of the Paridae family exhibit high intelligance, high adaptability and s
 Notes
 --------------------------------------------------------------------------------
 
-The convention used in this manual is: symbols bounded to macros are UPPER case, while symbols bounded to values are lower case.
+The convention used in this manual is: symbols bounded to procedures are UPPER case, while symbols bounded to values are lower case.
 
 The word push refers to pushing data onto stack.
 The word pull refers to pulling data out of the stack.
@@ -56,7 +56,7 @@ The evaluator can be expressed as this psudo-program:
 	self defining? -> push self
 
 		self defining values are values, that define themselves such as:
-		macros, numbers, strings, arrays etc ...
+		procedures, numbers, strings, arrays etc ...
 
 	quoted? -> push quoted
 		
@@ -66,7 +66,7 @@ The evaluator can be expressed as this psudo-program:
 	
 	symbol? -> get from lexicon the binding of the symbol and apply it:
 		
-		a symbol is valid expression which is not one of the above
+		a symbol is any valid expression which is not self defining or quoted.
 
 		* assuming that such a binding exists
 		* invald symbols: ', ;, (, )
@@ -111,10 +111,12 @@ Datatypes
 --------------------------------------------------------------------------------
 
 Parus requires the following datatypes:
-	- Macros - Both primitive and user defined macros 
+	- Procedures - Both base procedures and user defined procedures
 	- Symbols
 	- Quoted values
 	- Numeric value (either integers or floating points or both)
+
+* linguistically there is not difference between base procedures and user defined procedures.
 
 Parus may optionally support any other datatype such as:
 	- Complex numbers
@@ -125,7 +127,7 @@ Parus may optionally support any other datatype such as:
 	... etc
 
 
-Primitive Macros
+Base Procedures
 --------------------------------------------------------------------------------
 
 [ value symbol ] DEF
@@ -137,8 +139,9 @@ Deletes the most recent entry from the lexicon.
 [ top-of-the-stack ] !
 Also known as "apply top" or simply "apply", Passes the top of the stack to the apply function.
 
-* ON SOME (BUT NOT ALL) program languages, the apply function will have to provide a "back door" for this primitive,
-or any other similiar primitive, because if the primitive ! calls the apply function, 
+* ON SOME (BUT NOT ALL) program languages, 
+the apply function will have to provide a "back door" for this base procedure, 
+because if the base procedure ! calls the apply function, 
 and the apply function will try to apply the symbol ! it will cause mutual recursion between the two processes.
 
 [ value ] QUOTE
@@ -179,15 +182,15 @@ Arithmetic operations:
 [ a b ] < 	==> push 0 if not (a < b), a non zero value if a < b
 [ a b ] > 	==> push 0 if not (a > b), a non zero value if a > b
 
-Any datatype included in the implementation, has to have a macro that return if the top of the stack is of that datatype.
+Any datatype included in the implementation, has to have a procedure that returns if the top of the stack is of that datatype.
 
 For example:
 
 [ item ] INTEGER? 
 push a non 0 zero value if item is an integer else push 0.
 
-[ item ] MACRO?
-push a non 0 zero value if item is a macro (either a primitive or user defined) else push 0.
+[ item ] PROCEDURE?
+push a non 0 zero value if item is a procedure (either a base or user defined procedure) else push 0.
 
 [ item ] SYMBOL?
 push a non 0 zero value if item is a symbol else push 0.
@@ -209,16 +212,16 @@ Push the number that represent the character that is read from the terminal.
 READ 
 Reads from keyboard a valid symbol or number.
 
-Any other primitive may be included with a Parus implementation for more domain specific tasks.
+Any other base procedure may be included with a Parus implementation for more domain specific tasks.
 
-It is also recommended to include a common macros, Such as:
+It is also recommended to include a common procedures, Such as:
 [ symbol min max cmp inc fn ] FOR
 CASE [ c1 e1 c2 e2 ... ] END-CASE
 [ item ] DPL
  ... etc
-Although these macros could also be expressed in Parus.
+Although these procedures could also be expressed in Parus.
 
-It is also recommended to include macros like ?stk, ?lex in order to inspect the program.
+It is also recommended to include procedures like ?stk, ?lex in order to inspect the program.
 
 
 Recursion and Iteration
@@ -232,18 +235,18 @@ For Example consider:
 
 If no optimization was present in the implementation the following expression will result in overflow of the call stack,
 However this example is iterative (even though it has no result),
-So theoretically this process ought to run an infinite amount of times without overflowing the call stack.
+So theoretically this process should run an infinite amount of times without overflowing the call stack.
 
 In order to solve this problem the following optimization can be applied:
 
-The last call of any macro should run in the same call as the calling macro.
+The last call of any procedure should run in the same call as the calling procedure.
 
-This derives from the observation that once the last call has ended, the calling macro itself has ended,
-Thus there is no macro to return to, so it won't effect the computation if both macros would share the same call.
+This derives from the observation that once the last call has ended, the calling procedure itself has ended,
+Thus there is no procedure to return to, so it won't effect the computation if both procedure would share the same call.
 
-The following macro cannot be optimized:
+The following procedure cannot be optimized:
 ( A 1 + ) 'A DEF A
-Sense the call to A is not the last instruction in the macro, and the process will cause a call stack overflow eventually.
+Sense the call to A is not the last instruction in the procedure, and the process will cause a call stack overflow eventually.
 
 If the number of calls exceeds a preset value then an error is signaled.
 
@@ -274,7 +277,7 @@ Under the following circumstances an error is signaled:
 - When there is insufficient memory to complete the computation 
 	(for example when the maximal call depths has been reached)
 
-Primitive function which fail to execute successfully may also signal an error.
+Base procedures which fail to execute successfully may also signal an error.
 
 
 Appendix
@@ -283,16 +286,15 @@ Appendix
 The principles of the Parus language could be illustrated by the following simple Lisp functions:
 
 (define parus-apply (lambda (value stk lex)
-	(cond
-		((primitive? value) (value stk lex))
-		((macro? value)     (macro-eval value stk lex))
-		(else               (parus-eval value stk lex)))))
+		(cond
+			((base-procedure? value) 	(value stk lex))
+			((user-procedure? value) 	(procedure-eval value stk lex))
+			(else 						(parus-eval value stk lex)))))
 
 (define parus-eval (lambda (expr stk lex)
 	(cond
-		((self? expr)       ((stk 'push) expr))
-		((quoted? expr)     ((stk 'push) (quotate expr)))
-		((symbol? expr)     (parus-apply ((lex 'get) expr) stk lex))
+		((self? expr) 	((stk 'push) expr))
+		((quoted? expr)	((stk 'push) (quotate expr)))
+		((symbol? expr)	(parus-apply ((lex 'get) expr) stk lex))
 
 		(else (display "invalid expression ") (display expr) (newline) '()))))
-
