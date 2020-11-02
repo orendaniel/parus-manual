@@ -74,8 +74,12 @@ The evaluator can be expressed as this psudo-program:
 
 In order to evaluate a Parus expression both a stack and a lexicon are required.
 The stack represent the program's memory, it is a last in first out data structure.
-The lexicon represent the program's environment, it is a non scoping associative array (all entries in the lexicon are global).
-The lexicon can contain multiple entries with the same name, it will always return the most recent entry.
+
+The lexicon represent the program's environment.
+It may be implementated as either non scoping, lexical scoping, or dynamic scoping environment,
+this manual doesn't favour any particular name resolution method.
+However lexicon must have the ability of containing multiple entries with the same name, 
+it will always return the most recent entry.
 
 Invalid Expressions:
 	-Unterminated or uninitiated parentheses.
