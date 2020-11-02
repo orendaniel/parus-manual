@@ -2,41 +2,41 @@
 ; An example of a syntatic form that might be defined in Parus
 ; implementation of a CASE-like branching structure
 
-''CASE 'CASE DEF 	; a mark word
-1 'else DEF 		; else will always evaluate to true
+''case 'case define ; defines a mark word
+1 'else define 		; else will always evaluate to true
 
 
-( FIND 'STRIP_i 0 2 @ '< 1 'DROP FOR ) 'STRIP DEF ; a helper function that cleans the stack until a label
+( find 'strip_i 0 2 @ '< 1 'drop for ) 'strip define ; a helper function that cleans the stack until a label
 
 ( 
-	CASE FIND 1 - @ ! ; get the conditional macro
+	case find 1 - @ ! ; get the conditional macro
 
 	(  
-		CASE FIND 1 - @ 'CASE-END_RES DEF  	; get result
-		CASE STRIP 							; clean up
-		DROP 
-		CASE-END_RES 						; push result and clean up
-		'CASE-END_RES DEL
+		case find 1 - @ 'case-end_res define 	; get result
+		case strip 								; clean up
+		drop 
+		case-end_res 							; push result and clean up
+		'case-end_res delete
 	)
 
 	( 
-		CASE FIND 1 = 						; check if no more case
-		( CASE STRIP ) 						; if yes then clean up
-		( CASE FIND 1 - @ DROP END-CASE )   ; else continue to execute
-		IF ! 
+		case find 1 = 							; check if no more case
+		( case strip ) 							; if yes then clean up
+		( case find 1 - @ drop end-case )   	; else continue to execute
+		if ! 
 	) ; else continue
 
-	IF ! 
-) 'END-CASE DEF 
+	if ! 
+) 'end-case define
 
-3 'x DEF
+3 'x define
 
 ; mark the start of the structure
-CASE
-	( x 3 < )   ( 'A OUTLN )
-	( x 3 = )   ( CASE ( 5 3 < ) ( 'C OUTLN ) ( else ) ( 'D OUTLN ) END-CASE )
-	( else )    ( 'B OUTLN )
-END-CASE
-; END-CASE is the actual macro which evaluate the structure
+case
+	( x 3 < )   ( 'A outln )
+	( x 3 = )   ( case ( 5 3 < ) ( 'C outln ) ( else ) ( 'D outln ) end-case )
+	( else )    ( 'B outln )
+end-case
+; end-case is the actual macro which evaluate the structure
 
-'x DEL
+'x delete 

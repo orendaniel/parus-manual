@@ -5,44 +5,46 @@
 
 ; redefines a symbol
 (
-	DPL DEL 
-	DEF
-) 'REDEF DEF
+	dpl delete
+	define
+) 'redef define
 
 ( 
-	'FOR_FN 		DEF ; bind the function
-	'FOR_i 		DEF ; bind the increment amount
-	'FOR_cmp 		DEF ; symbol to comparator function
-	'FOR_b 		DEF ; bind the end value
-	'FOR_a 		DEF ; bind the start value
-	QUOTE 'FOR_sym DEF ; bind the symbol that represent the iterator
+	'for_fn 	define ; bind the function
+	'for_i 		define ; bind the increment amount
+	'for_cmp 	define ; symbol to comparator function
+	'for_b 		define ; bind the end value
+	'for_a 		define ; bind the start value
+
+	quote 'for_sym define ; bind the symbol that represent the iterator
+
 	; For example 
 	; if the iterator symbol is i the FOR_sym means i 
 	; and FOR_sym ! means the value of i
 
-	FOR_a FOR_sym DEF ; bind start value to iterator
+	for_a for_sym define ; bind start value to iterator
 	
 	( 
-		FOR_sym ! FOR_b FOR_cmp
+		for_sym ! for_b for_cmp
 		; call the function, then redefine the iterator as iterator + FOR_i, then iterate again 
-		( FOR_FN FOR_sym ! FOR_i + FOR_sym REDEF FOR_HELPER  )
+		( for_fn for_sym ! for_i + for_sym redef for_helper  )
 		; delete the iterator
-		( FOR_sym DEL ) IF !
-	) 'FOR_HELPER DEF
+		( for_sym delete ) if !
+	) 'for_helper define
 	
-	FOR_HELPER
+	for_helper
 	
 	; delete everything the FOR used
-	'FOR_HELPER DEL
-	'FOR_FN 	DEL
-	'FOR_i 		DEL
-	'FOR_cmp 	DEL
-	'FOR_b 		DEL 
-	'FOR_a 		DEL 
-	'FOR_sym 	DEL
+	'for_helper delete
+	'for_fn 	delete
+	'for_i 		delete
+	'for_cmp 	delete
+	'for_b 		delete
+	'for_a 		delete
+	'for_sym 	delete
 
-) 'FOR DEF
+) 'for define
 
-( 1 @. 1 @. < 2 @ 2 @ = + ) '<= DEF
+( 1 @. 1 @. < 2 @ 2 @ = + ) '<= define
 
-'a 1 10 '<= 1 ( a OUTLN ) FOR 
+'a 1 10 '<= 1 ( a outln ) for 

@@ -1,13 +1,13 @@
-; [ value index ] SETAT
+; [ value index ] setat
 
 (
-	DPL 2 + @ DROP ; remove original
-	'SETAT_ind DEF 
-	'SETAT_i 0 SETAT_ind '< 1 ( SETAT_ind @ ) FOR 
-	'SETAT_ind DEL 
-) 'SETAT DEF 
+	dpl 2 + @ drop ; remove original
+	'setat_ind define
+	'setat_i 0 setat_ind '< 1 ( setat_ind @ ) for 
+	'setat_ind delete 
+) 'setat define
 
 1 2 3 4 5 
 
-9 2 SETAT
+9 2 setat
 ?stk
