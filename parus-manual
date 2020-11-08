@@ -79,8 +79,6 @@ The stack represent the program's memory, it is a last in first out data structu
 The lexicon represent the program's environment.
 It may be implementated as either non scoping, lexical scoping, or dynamic scoping environment,
 this manual doesn't favour any particular name resolution method.
-However the lexicon must have the ability of containing multiple entries with the same name, 
-it will always return the most recent entry.
 
 Invalid Expressions:
 	-Unterminated or uninitiated parentheses.
@@ -94,9 +92,8 @@ Examples for valid expressions
 'Symbol 
 ''QSym
 1
-( 1 2 ( + ) ! ) !
-( dpl * ) '^2 define ; 3 expressions ( dpl * ), '^2, define
-f(t)
+(1 2 (+) !) !
+(dpl *) '^2 define ; 3 expressions ( dpl * ), '^2, define
 David's-House
 
 Examples for invalid expressions
@@ -105,8 +102,6 @@ Examples for invalid expressions
 ( ( ) 		; unterminated
 ' 			; invalid quote form
 ''' 		; invalid quote form
-(dpl * ) 	; the parentheses must be separated by a space 
-'( dpl * )  ; non symbolic quote
 '''5  		; non symbolic quote
 
 
@@ -228,7 +223,7 @@ Any iterative construct in Parus is represented by a recursive construct.
 
 For Example consider:
 
-( A ) 'A define A 
+(A) 'A define A 
 
 If no optimization was present in the implementation the following expression will result in overflow of the call stack,
 However this example is iterative (even though it has no result),
@@ -243,7 +238,7 @@ Thus there is no operator to return to, so it won't effect the computation if bo
 
 The following operator cannot be optimized:
 
-( A 1 + ) 'A define A
+(A 1 +) 'A define A
 
 Sense the call to A is not the last instruction in the operator, and the process will cause a call stack overflow eventually.
 
@@ -253,14 +248,14 @@ Note that these examples are also iterative:
 
 'A 'A define A
 
-( 'A ! ) 'A define A
+('A !) 'A define A
 
-( ( A ) ! ) 'A define A
+((A) !) 'A define A
 
-( ( 'A ! ) ! ) 'A define A
+(('A !) !) 'A define A
 
-( B ) 'A define
-( A ) 'B define A
+(B) 'A define
+(A) 'B define A
 
 Errors
 --------------------------------------------------------------------------------
