@@ -194,7 +194,7 @@ push a non 0 zero value if item is a symbol else push 0.
 [ item ] quoted?
 push a non 0 zero value if item is quoted else push 0.
 
-Any other base operator may be included with a Parus implementation for more domain specific tasks.
+Any other base operator may be included with a Parus implementation.
 
 It is also recommended to include a common opterator, Such as:
 [ symbol min max cmp inc fn ] for
@@ -203,10 +203,6 @@ case [ c1 e1 c2 e2 ... ] end-case
  ... etc
 
 Although these operators could also be expressed in Parus.
-
-It is also recommended to include operators like out and read for basic I/O,
-and also ?stk and ?lex in order to inspect the program.
-
 
 Recursion and Iteration
 --------------------------------------------------------------------------------
