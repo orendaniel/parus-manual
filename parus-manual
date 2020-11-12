@@ -142,7 +142,7 @@ the apply function will have to provide a "back door" for this base operator,
 because if the base operator ! calls the apply function, 
 and the apply function will try to apply the symbol ! it will cause mutual recursion between the two processes.
 
-[ value ] quote
+[ value ] quotate
 Quotates the top item of the stack assuming it is quotable.
 
 [ condition true false ] if
