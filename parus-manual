@@ -58,10 +58,8 @@ The evaluator can be expressed as this psudo-program:
 
 	quoted? -> push quoted
 		
-		a quoted symbol is any symbol that is prefixed with a ' character.
+		a quoted expression is any expression that is prefixed with a ' character.
 
-		* only symbols and quoted symbols can be quoted, it is an error to do otherwise.
-	
 	symbol? -> get from lexicon the binding of the symbol and apply it:
 		
 		a symbol is any valid expression which is not self defining or quoted.
@@ -83,7 +81,6 @@ this manual doesn't favour any particular name resolution method.
 Invalid Expressions:
 	-Unterminated or uninitiated parentheses.
 	-A standalone Quote form (', '', ''', ...)
-	-A non symbolic quote
 
 If invalid expression is given an error is signaled.
 
@@ -102,7 +99,6 @@ Examples for invalid expressions
 ( ( ) 		; unterminated
 ' 			; invalid quote form
 ''' 		; invalid quote form
-'''5  		; non symbolic quote
 
 
 Datatypes
@@ -143,7 +139,7 @@ because if the base operator ! calls the apply function,
 and the apply function will try to apply the symbol ! it will cause mutual recursion between the two processes.
 
 [ value ] quotate
-Quotates the top item of the stack assuming it is quotable.
+Quotates the top item of the stack.
 
 [ condition true false ] if
 If condition is a non zero value then, pull false else, pull true from the stack.
