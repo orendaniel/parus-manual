@@ -98,6 +98,7 @@ Examples for invalid expressions
 ( ) ) 		; uninitiated
 ( ( ) 		; unterminated
 ' 			; invalid quote form
+('') 		; invalid quote form
 ''' 		; invalid quote form
 
 
