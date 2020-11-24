@@ -91,7 +91,6 @@ Examples for valid expressions
 1
 (1 2 (+) !) !
 (dpl *) '^2 define ; 3 expressions ( dpl * ), '^2, define
-David's-House
 
 Examples for invalid expressions
 --------------------------------
