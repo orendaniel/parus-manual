@@ -166,6 +166,7 @@ Push the index of the most recent equivalent value.
 * Important the index given is before the parameter value is given or the result returned
 Example:
 4 3 'a 1 0 'a find --> 4 3 'a 1 0 2
+If the symbol is not present return -1
 
 Arithmetic operations:
 
