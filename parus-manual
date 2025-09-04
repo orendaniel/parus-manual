@@ -29,7 +29,7 @@ MANUAL.
 Context
 --------------------------------------------------------------------------------
 
-Parus is a stack based symbolic programming language, devised around Rosh Hashana of the year 2020 by Oren Daniel.
+Parus is a stack based symbolic programming language, devised around new hebrew year's eve of 5781 (september 2020).
 The following document defines the language, however it does not define any specific implementation of the language.
 Neither is this document suited as a learning material for the language.
 The language is named after Paridae bird family (Tits, Titmice and Chickadees).
@@ -142,7 +142,7 @@ and the apply function will try to apply the symbol ! it will cause mutual recur
 Quotates the top item of the stack.
 
 [ condition true false ] if
-If condition is a non zero value then, pull false else, pull true from the stack.
+If condition is a non zero value then, remove false else, remove true from the stack.
 
 [ a b ] eqv?
 Push a non 0 value if a and b are equivalent 0 if not.
@@ -163,6 +163,9 @@ Drops the top of the stack
 
 [ value ] find
 Push the index of the most recent equivalent value.
+* Important the index given is before the parameter value is given or the result returned
+Example:
+4 3 'a 1 0 'a find --> 4 3 'a 1 0 2
 
 Arithmetic operations:
 
