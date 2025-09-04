@@ -194,7 +194,7 @@ push a non 0 zero value if item is a symbol else push 0.
 [ item ] quoted?
 push a non 0 zero value if item is quoted else push 0.
 
-Any other base operator may be included with a Parus implementation.
+Any other base operator may be included with a Parus implementation. these operators should not remove the top.
 
 It is also recommended to include a common opterator, Such as:
 [ symbol min max cmp inc fn ] for
