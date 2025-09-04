@@ -29,7 +29,7 @@ MANUAL.
 Context
 --------------------------------------------------------------------------------
 
-Parus is a stack based symbolic programming language, devised around new hebrew year's eve of 5781 (september 2020).
+Parus is a stack based symbolic programming language, devised around new the Hebrew year's eve of 5781 (september 2020).
 The following document defines the language, however it does not define any specific implementation of the language.
 Neither is this document suited as a learning material for the language.
 The language is named after Paridae bird family (Tits, Titmice and Chickadees).
